@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ZhaopiankuDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.zhaopianku_name as zhaopiankuName
+        ,a.zhaopianku_types as zhaopiankuTypes
+        ,a.zhaopianku_photo as zhaopiankuPhoto
+        ,a.zhaopianku_content as zhaopiankuContent
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.ZhaopiankuView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+
+        FROM zhaopianku  a
+
+        <where>
+            <if test=" params.zhaopiankuName != '' and params.zhaopiankuName != null and params.zhaopiankuName != 'null' ">
+                and a.zhaopianku_name like CONCAT('%',#{params.zhaopiankuName},'%')
+            </if>
+            <if test="params.zhaopiankuTypes != null">
+                and a.zhaopianku_types = #{params.zhaopiankuTypes}
+            </if>
+            <if test=" params.zhaopiankuContent != '' and params.zhaopiankuContent != null and params.zhaopiankuContent != 'null' ">
+                and a.zhaopianku_content like CONCAT('%',#{params.zhaopiankuContent},'%')
+            </if>
+
+        </where>
+        order by a.${params.orderBy} desc
+    </select>
+
+</mapper>
